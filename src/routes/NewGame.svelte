@@ -1,14 +1,18 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-  import Button from '@smui/button'
-  import Select, { Option } from '@smui/select'
-  import LayoutGrid, { Cell } from '@smui/layout-grid'
+  import {
+    Button,
+    Grid,
+    Row,
+    Column,
+    Select,
+    SelectItem,
+  } from 'carbon-components-svelte'
   import { useNavigate } from 'svelte-navigator'
 
   import { auth } from '../lib/auth'
   import FormError from '../lib/components/FormError.svelte'
   import * as api from '../lib/api'
-  import Typography from '../lib/components/Typography.svelte'
   import type { Question } from '../lib/types/question'
 
   interface GameQuestion {
@@ -82,7 +86,7 @@
 </script>
 
 <div>
-  <Typography variant="h1">New Game</Typography>
+  <h1>New Game</h1>
   <form on:submit|preventDefault={submit}>
     <div class="questions">
       {#if loading}
@@ -90,9 +94,9 @@
       {:else}
         {#each gameQuestions as gameQuestion}
           <div class="question-row">
-            <Select bind:value={gameQuestion.id} label="Select Question">
+            <Select bind:selected={gameQuestion.id} labelText="Select Question">
               {#each questions as question}
-                <Option value={question.id}>{question.body}</Option>
+                <SelectItem value={question.id} text={question.body} />
               {/each}
             </Select>
           </div>
@@ -100,16 +104,14 @@
       {/if}
       <FormError errorMsg={error} />
     </div>
-    <LayoutGrid>
-      <Cell>
-        <Button variant="raised" type="button" on:click={addGameQuestion}>
+    <div class="buttons">
+      <div class="button-cell">
+        <Button kind="secondary" type="button" on:click={addGameQuestion}>
           Add Question
         </Button>
-      </Cell>
-      <Cell>
-        <Button variant="raised" type="submit">Create</Button>
-      </Cell>
-    </LayoutGrid>
+      </div>
+      <div class="button-cell"><Button type="submit">Create</Button></div>
+    </div>
   </form>
 </div>
 
@@ -119,6 +121,16 @@
   }
 
   .question-row {
-    margin-bottom: 20px;
+    margin-top: 20px;
+    max-width: 400px;
+  }
+
+  .buttons {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .button-cell {
+    margin-right: 5px;
   }
 </style>
