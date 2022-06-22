@@ -1,5 +1,5 @@
 import sveltePreprocess from 'svelte-preprocess'
-import { optimizeImports } from 'carbon-preprocess-svelte'
+import { optimizeImports, optimizeCss } from 'carbon-preprocess-svelte'
 import adapter from '@sveltejs/adapter-static'
 
 export default {

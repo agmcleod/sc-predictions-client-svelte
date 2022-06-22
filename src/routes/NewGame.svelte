@@ -87,11 +87,11 @@
 
 <div>
   <h1>New Game</h1>
-  <form on:submit|preventDefault={submit}>
-    <div class="questions">
-      {#if loading}
-        <p>Loading&hellip;</p>
-      {:else}
+  {#if loading}
+    <p>Loading&hellip;</p>
+  {:else}
+    <form on:submit|preventDefault={submit}>
+      <div class="questions">
         {#each gameQuestions as gameQuestion}
           <div class="question-row">
             <Select bind:selected={gameQuestion.id} labelText="Select Question">
@@ -101,18 +101,19 @@
             </Select>
           </div>
         {/each}
-      {/if}
-      <FormError errorMsg={error} />
-    </div>
-    <div class="buttons">
-      <div class="button-cell">
-        <Button kind="secondary" type="button" on:click={addGameQuestion}>
-          Add Question
-        </Button>
+
+        <FormError errorMsg={error} />
       </div>
-      <div class="button-cell"><Button type="submit">Create</Button></div>
-    </div>
-  </form>
+      <div class="buttons">
+        <div class="button-cell">
+          <Button kind="secondary" type="button" on:click={addGameQuestion}>
+            Add Question
+          </Button>
+        </div>
+        <div class="button-cell"><Button type="submit">Create</Button></div>
+      </div>
+    </form>
+  {/if}
 </div>
 
 <style>
