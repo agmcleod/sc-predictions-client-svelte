@@ -1,16 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-  import {
-    Button,
-    Grid,
-    Row,
-    Column,
-    Select,
-    SelectItem,
-  } from 'carbon-components-svelte'
+  import { Button, Select, SelectItem } from 'carbon-components-svelte'
   import { useNavigate } from 'svelte-navigator'
 
-  import { auth } from '../lib/auth'
+  import { auth } from '../lib/stores/auth'
   import FormError from '../lib/components/FormError.svelte'
   import * as api from '../lib/api'
   import type { Question } from '../lib/types/question'
@@ -24,7 +17,7 @@
   }
 
   let loading = true
-  let questions = []
+  let questions: Question[] = []
   let gameQuestions: GameQuestion[] = [
     {
       id: undefined,

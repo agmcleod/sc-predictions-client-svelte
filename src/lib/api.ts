@@ -1,5 +1,12 @@
+import { auth } from './stores/auth'
+
+let token = ''
+
+auth.subscribe((t) => {
+  token = t
+})
+
 function getHeaders() {
-  const token = '' //store.getState().currentUser.accessToken
   if (token) {
     return {
       Authorization: `Bearer ${token}`,
