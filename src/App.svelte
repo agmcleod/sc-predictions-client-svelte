@@ -6,11 +6,13 @@
   import './index.css'
   import Lobby from './routes/Lobby.svelte'
   import NewGame from './routes/NewGame.svelte'
+  import Websocket from './lib/Websocket.svelte'
 </script>
 
 <main class="mdc-typography">
   <div class="container">
     <Router>
+      <Websocket />
       <Route path="/" component={NewGame} />
       <PrivateRoute path="/lobby" component={Lobby} />
     </Router>
