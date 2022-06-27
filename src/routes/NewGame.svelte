@@ -7,6 +7,7 @@
   import FormError from '../lib/components/FormError.svelte'
   import * as api from '../lib/api'
   import type { Question } from '../lib/types/question'
+  import { clear } from '../lib/stores/clear'
 
   interface GameQuestion {
     id?: number
@@ -46,8 +47,8 @@
         question_ids: gameQuestions.map((gq) => gq.id),
       })
 
+      // clear()
       auth.set(response.creator)
-      // TODO: Clear out other previous game state data if any
       navigate('/lobby')
     } catch (err) {
       error = err.message

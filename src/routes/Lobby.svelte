@@ -5,7 +5,7 @@
   import FormError from '../lib/components/FormError.svelte'
   import { Role } from '../lib/types/tokenData'
   import { gameId, role } from '../lib/stores/auth'
-  import { game, getGameStatus } from '../lib/stores/game'
+  import { game, gameSlug, getGameStatus } from '../lib/stores/game'
   import { getPlayers, players } from '../lib/stores/players'
   import { websocket } from '../lib/stores/websocket'
 
@@ -43,7 +43,7 @@
 </script>
 
 <div>
-  <h1>Game code: ABCTEMP</h1>
+  <h1>Game code: {$gameSlug}</h1>
   {#if $role === Role.Owner}
     <p>
       Tell your players the game code, and to join at: {JOIN_URL}

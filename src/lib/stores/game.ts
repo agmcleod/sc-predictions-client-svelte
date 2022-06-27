@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store'
+import { writable, derived } from 'svelte/store'
 
 import * as api from '../api'
 import { getErrorsFromResponse } from '../getErrorsFromResponse'
@@ -20,12 +20,16 @@ interface GameState extends SetGameStatusPayload {
   error: string
 }
 
-export const game = writable<GameState>({
+export const getInitialState = (): GameState => ({
   slug: '',
   open_round: false,
   unfinished_round: false,
   error: '',
 })
+
+export const game = writable<GameState>(getInitialState())
+
+export const gameSlug = derived(game, (game) => game.slug)
 
 export const getGameStatus = async () => {
   try {

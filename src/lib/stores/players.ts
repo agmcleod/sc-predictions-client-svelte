@@ -4,15 +4,17 @@ import { getErrorsFromResponse } from '../getErrorsFromResponse'
 import type { Player } from '../types/player'
 import * as api from '../api'
 
-export const players = writable<{
-  data: Player[]
-  loading: boolean
-  error: string
-}>({
+export const getInitialState = () => ({
   data: [],
   loading: false,
   error: '',
 })
+
+export const players = writable<{
+  data: Player[]
+  loading: boolean
+  error: string
+}>(getInitialState())
 
 export const getPlayers = async (gameId: number) => {
   try {
