@@ -1,12 +1,23 @@
+import { vi } from 'vitest'
 import { fireEvent, waitFor } from '@testing-library/svelte'
 import { rest } from 'msw'
 import { setupServer, SetupServerApi } from 'msw/node'
+import { useNavigate } from 'svelte-navigator'
 
 import { createToken } from '../../test/token'
 import { auth } from '../../lib/stores/auth'
 import { renderWithRouter } from '../../test/renderWithRouter'
 import { Role } from '../../lib/types/tokenData'
 import Join from '../Join.svelte'
+
+vi.mock('svelte-navigator', async () => {
+  const svn = await vi.importActual<any>('svelte-navigator')
+  const navigate = vi.fn()
+  return {
+    ...svn,
+    useNavigate: vi.fn().mockReturnValue(navigate),
+  }
+})
 
 let token
 let server: SetupServerApi
@@ -67,6 +78,7 @@ describe('<Join />', () => {
 
   test('shows error returned from API', async () => {
     const { findByText, findByLabelText, queryByText } = renderWithRouter(Join)
+    const navigate = useNavigate()
 
     server.use(
       rest.post(
@@ -94,5 +106,7 @@ describe('<Join />', () => {
     await waitFor(() =>
       expect(queryByText(/Username already in use/i)).toBeInTheDocument()
     )
+
+    expect(navigate).toHaveBeenCalledWith('/lobby')
   })
 })

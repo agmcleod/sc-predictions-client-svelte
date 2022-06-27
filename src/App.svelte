@@ -4,6 +4,7 @@
 
   import PrivateRoute from './lib/PrivateRoute.svelte'
   import './index.css'
+  import Join from './routes/Join.svelte'
   import Lobby from './routes/Lobby.svelte'
   import NewGame from './routes/NewGame.svelte'
   import Websocket from './lib/Websocket.svelte'
@@ -11,10 +12,11 @@
 
 <main class="mdc-typography">
   <div class="container">
+    <Websocket />
     <Router>
-      <Websocket />
       <Route path="/" component={NewGame} />
       <PrivateRoute path="/lobby" component={Lobby} />
+      <Route path="/join" component={Join} />
     </Router>
   </div>
 </main>

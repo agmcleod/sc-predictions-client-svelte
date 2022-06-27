@@ -2,6 +2,7 @@
   import { onMount } from 'svelte'
 
   import { closeConnection, getClient, sendMsg } from './websocket'
+  import { auth } from './stores/auth'
   import { websocket } from './stores/websocket'
   import { game } from './stores/game'
   import { players } from './stores/players'
@@ -52,6 +53,10 @@
         closeConnection()
       }
     }
+  }
+
+  $: if ($auth && $websocket.connected) {
+    sendMsg(`/auth ${JSON.stringify({ token: $auth })}`)
   }
 
   onMount(setupClient)
