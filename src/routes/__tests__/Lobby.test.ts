@@ -1,6 +1,6 @@
 import { waitFor } from '@testing-library/svelte'
 import { rest } from 'msw'
-import { setupServer } from 'msw/node'
+import { setupServer, SetupServerApi } from 'msw/node'
 import { faker } from '@faker-js/faker'
 
 import { renderWithRouter } from '../../test/renderWithRouter'
@@ -14,7 +14,7 @@ const gameId = 'ABC187'
 
 let nameOne
 let nameTwo
-let server
+let server: SetupServerApi
 
 beforeAll(() => {
   nameOne = faker.name.firstName()

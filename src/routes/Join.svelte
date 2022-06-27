@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { TextInput } from 'carbon-components-svelte'
+  import { Button, TextInput } from 'carbon-components-svelte'
   import { useNavigate } from 'svelte-navigator'
 
+  import FormError from '../lib/components/FormError.svelte'
   import { getErrorsFromResponse } from '../lib/getErrorsFromResponse'
   import * as api from '../lib/api'
   import { auth } from '../lib/stores/auth'
@@ -13,10 +14,17 @@
   let gamecode = ''
   let usernameError = ''
   let gamecodeError = ''
+  let serverError = ''
 
   async function onSubmit() {
     if (!username) {
       usernameError = 'Invalid username'
+    }
+    if (gamecode.length !== 6) {
+      gamecodeError = 'Invalid game code'
+    }
+
+    if (usernameError) {
       return
     }
 
@@ -38,12 +46,13 @@
         navigate('/lobby')
       }
     } catch (err) {
-      gamecodeError = getErrorsFromResponse(err).join(', ')
+      serverError = getErrorsFromResponse(err).join(', ')
     }
   }
 </script>
 
 <h1>Join Game</h1>
+<FormError errorMsg={serverError} />
 <form on:submit|preventDefault={onSubmit}>
   <div class="field-wrapper">
     <TextInput
@@ -63,6 +72,7 @@
       invalidText={gamecodeError}
     />
   </div>
+  <Button type="submit">Submit</Button>
 </form>
 
 <style>
