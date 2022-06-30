@@ -7,6 +7,7 @@
   import Join from './routes/Join.svelte'
   import Lobby from './routes/Lobby.svelte'
   import NewGame from './routes/NewGame.svelte'
+  import NewRound from './routes/NewRound.svelte'
   import Websocket from './lib/Websocket.svelte'
 </script>
 
@@ -17,6 +18,7 @@
       <Route path="/" component={NewGame} />
       <PrivateRoute path="/lobby" component={Lobby} />
       <Route path="/join" component={Join} />
+      <PrivateRoute path="/create-round" component={NewRound} />
     </Router>
   </div>
 </main>
