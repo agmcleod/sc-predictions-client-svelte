@@ -73,6 +73,6 @@ describe('<NewRound />', () => {
       expect(queryByText(/name must be different/i)).not.toBeInTheDocument()
     )
 
-    expect(navigate).toHaveBeenCalledWith('/round')
+    await waitFor(() => expect(navigate).toHaveBeenCalledWith('/round'))
   })
 })
