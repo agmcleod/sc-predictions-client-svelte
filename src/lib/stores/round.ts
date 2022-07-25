@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store'
+import { writable, derived } from 'svelte/store'
 
 import * as api from '../api'
 import type { Question } from '../types/question'
@@ -33,6 +33,8 @@ export const getInitialState = (): RoundState => ({
 })
 
 export const round = writable<RoundState>(getInitialState())
+export const isLocked = derived(round, (round) => round.locked)
+export const isFinished = derived(round, (round) => round.finished)
 
 export const getRoundStatus = async () => {
   const res = await api.getRequest<ApiResponse>('/current-round')

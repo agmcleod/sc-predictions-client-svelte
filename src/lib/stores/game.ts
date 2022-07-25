@@ -30,6 +30,7 @@ export const getInitialState = (): GameState => ({
 export const game = writable<GameState>(getInitialState())
 
 export const gameSlug = derived(game, (game) => game.slug)
+export const hasOpenRound = derived(game, (game) => game.open_round)
 
 export const getGameStatus = async () => {
   try {
