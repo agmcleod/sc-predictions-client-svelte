@@ -13,7 +13,7 @@
 
   onMount(loadData)
 </script>
-
+<p>{`${$role} ${$hasOpenRound} ${$isLocked} ${$isFinished}`}</p>
 {#if $role === Role.Owner}
   {#if $hasOpenRound}
     ViewCurrentPicks

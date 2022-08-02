@@ -9,6 +9,7 @@ import {
 } from '../../../lib/stores/game'
 import {
   round,
+  ApiResponse as RoundApiResponse,
   getInitialState as getRoundInitialState,
 } from '../../../lib/stores/round'
 import { renderWithRouter } from '../../../test/renderWithRouter'
@@ -18,6 +19,17 @@ import CurrentRound from '../CurrentRound.svelte'
 
 const gameId = 'HJG672'
 let server: SetupServerApi
+
+function getRoundResponse() {
+  return {
+    round_id: 1,
+    player_names: [],
+    locked: false,
+    finished: false,
+    picks_chosen: false,
+    questions: [],
+  }
+}
 
 beforeAll(() => {
   server = setupServer(
@@ -30,7 +42,7 @@ beforeAll(() => {
     rest.get(
       `${import.meta.env.VITE_API_URL}/current-round`,
       (req, res, ctx) => {
-        return res(ctx.json(getRoundInitialState()))
+        return res(ctx.json(getRoundResponse()))
       }
     )
   )
@@ -86,10 +98,9 @@ describe('<CurrentRound />', () => {
           `${import.meta.env.VITE_API_URL}/current-round`,
           (req, res, ctx) => {
             return res(
-              ctx.json({
-                ...getRoundInitialState(),
+              ctx.json<RoundApiResponse>({
+                ...getRoundResponse(),
                 locked: true,
-                finished: false,
               })
             )
           }
@@ -103,6 +114,61 @@ describe('<CurrentRound />', () => {
       expect(queryByText(/viewcurrentpicks/i)).not.toBeInTheDocument()
       expect(queryByText(/selectpicks/i)).not.toBeInTheDocument()
       expect(queryByText(/lockscreen/i)).not.toBeInTheDocument()
+    })
+  })
+
+  describe('Player', () => {
+    beforeEach(() => {
+      auth.set(createToken(gameId, Role.Player))
+    })
+
+    test('hasOpenRound and is not locked, can select picks', async () => {
+      server.use(
+        rest.get(
+          `${import.meta.env.VITE_API_URL}/games/${gameId}`,
+          (req, res, ctx) => {
+            return res(
+              ctx.json({
+                ...getGameInitialState(),
+                open_round: true,
+                slug: gameId,
+              })
+            )
+          }
+        )
+      )
+      const { queryByText } = renderWithRouter(CurrentRound)
+
+      await waitFor(() =>
+        expect(queryByText(/selectpicks/i)).toBeInTheDocument()
+      )
+      expect(queryByText(/chooseanswers/i)).not.toBeInTheDocument()
+      expect(queryByText(/viewcurrentpicks/i)).not.toBeInTheDocument()
+      expect(queryByText(/lockscreen/i)).not.toBeInTheDocument()
+    })
+
+    test('isLocked but not finished, sees the locked screen', async () => {
+      server.use(
+        rest.get(
+          `${import.meta.env.VITE_API_URL}/current-round`,
+          (req, res, ctx) => {
+            return res(
+              ctx.json<RoundApiResponse>({
+                ...getRoundResponse(),
+                locked: true,
+              })
+            )
+          }
+        )
+      )
+      const { queryByText } = renderWithRouter(CurrentRound)
+
+      await waitFor(() =>
+        expect(queryByText(/lockscreen/i)).toBeInTheDocument()
+      )
+      expect(queryByText(/viewcurrentpicks/i)).not.toBeInTheDocument()
+      expect(queryByText(/selectpicks/i)).not.toBeInTheDocument()
+      expect(queryByText(/chooseanswers/i)).not.toBeInTheDocument()
     })
   })
 })

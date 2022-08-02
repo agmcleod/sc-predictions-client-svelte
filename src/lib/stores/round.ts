@@ -14,7 +14,7 @@ interface RoundState {
   roundPicks: UserAnswer[]
 }
 
-interface ApiResponse {
+export interface ApiResponse {
   player_names: string[]
   questions: Question[]
   round_id: number
@@ -33,7 +33,9 @@ export const getInitialState = (): RoundState => ({
 })
 
 export const round = writable<RoundState>(getInitialState())
-export const isLocked = derived(round, (round) => round.locked)
+export const isLocked = derived(round, (round) => {
+  return round.locked
+})
 export const isFinished = derived(round, (round) => round.finished)
 
 export const getRoundStatus = async () => {
@@ -41,6 +43,9 @@ export const getRoundStatus = async () => {
   round.update((r) => {
     return {
       ...r,
+      locked: res.locked,
+      finished: res.finished,
+      questions: res.questions,
       playerNames: res.player_names,
       picksChosen: res.picks_chosen,
     }
