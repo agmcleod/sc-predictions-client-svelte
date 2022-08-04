@@ -1,5 +1,5 @@
-<script lang='ts'>
-  import { onMount } from 'svelte';
+<script lang="ts">
+  import { onMount } from 'svelte'
 
   import { Role } from '../../lib/types/tokenData'
   import { getGameStatus, hasOpenRound } from '../../lib/stores/game'
@@ -13,7 +13,7 @@
 
   onMount(loadData)
 </script>
-<p>{`${$role} ${$hasOpenRound} ${$isLocked} ${$isFinished}`}</p>
+
 {#if $role === Role.Owner}
   {#if $hasOpenRound}
     ViewCurrentPicks

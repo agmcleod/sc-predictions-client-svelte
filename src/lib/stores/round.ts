@@ -14,13 +14,18 @@ interface RoundState {
   roundPicks: UserAnswer[]
 }
 
-export interface ApiResponse {
+export interface RoundStatusResponse {
   player_names: string[]
   questions: Question[]
   round_id: number
   locked: boolean
   finished: boolean
   picks_chosen: boolean
+}
+
+export interface RoundPicksResponse {
+  data: UserAnswer[]
+  locked: boolean
 }
 
 export const getInitialState = (): RoundState => ({
@@ -37,9 +42,10 @@ export const isLocked = derived(round, (round) => {
   return round.locked
 })
 export const isFinished = derived(round, (round) => round.finished)
+export const roundPicks = derived(round, (round) => round.roundPicks)
 
 export const getRoundStatus = async () => {
-  const res = await api.getRequest<ApiResponse>('/current-round')
+  const res = await api.getRequest<RoundStatusResponse>('/current-round')
   round.update((r) => {
     return {
       ...r,
@@ -50,4 +56,13 @@ export const getRoundStatus = async () => {
       picksChosen: res.picks_chosen,
     }
   })
+}
+
+export const getRoundPicks = async () => {
+  const res = await api.getRequest<RoundPicksResponse>('/rounds/picks')
+  round.update((r) => ({
+    ...r,
+    roundPicks: res.data,
+    locked: res.locked,
+  }))
 }

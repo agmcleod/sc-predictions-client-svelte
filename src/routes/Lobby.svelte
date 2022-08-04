@@ -6,7 +6,7 @@
   import { Role } from '../lib/types/tokenData'
   import { gameId, role } from '../lib/stores/auth'
   import { game, gameSlug, getGameStatus } from '../lib/stores/game'
-  import { getPlayers, players } from '../lib/stores/players'
+  import { getPlayers, playersData, error } from '../lib/stores/players'
   import { websocket } from '../lib/stores/websocket'
 
   const JOIN_URL = `${import.meta.env.VITE_HOST}/join`
@@ -50,11 +50,11 @@
     </p>
   {/if}
   <ul>
-    {#each $players.data as player}
+    {#each $playersData as player}
       <li>{player.user_name}</li>
     {/each}
   </ul>
-  <FormError errorMsg={$players.error || $game.error} />
+  <FormError errorMsg={$error || $game.error} />
   {#if $role === Role.Owner}
     <Link to="/create-round">Start a Round</Link>
   {/if}

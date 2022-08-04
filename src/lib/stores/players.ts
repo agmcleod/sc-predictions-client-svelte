@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store'
+import { writable, derived } from 'svelte/store'
 
 import { getErrorsFromResponse } from '../getErrorsFromResponse'
 import type { Player } from '../types/player'
@@ -15,6 +15,10 @@ export const players = writable<{
   loading: boolean
   error: string
 }>(getInitialState())
+
+export const isLoading = derived(players, (players) => players.loading)
+export const playersData = derived(players, (players) => players.data)
+export const error = derived(players, (players) => players.error)
 
 export const getPlayers = async (gameId: number) => {
   try {
