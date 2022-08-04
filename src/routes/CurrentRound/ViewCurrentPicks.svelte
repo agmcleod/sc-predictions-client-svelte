@@ -4,19 +4,35 @@
   import CloseIcon from 'carbon-icons-svelte/lib/Close.svelte'
   import CheckmarkIcon from 'carbon-icons-svelte/lib/Checkmark.svelte'
 
+  import { getErrorsFromResponse } from '../../lib/getErrorsFromResponse'
   import FormError from '../../lib/components/FormError.svelte'
   import {
     playersData,
     error,
     getPlayers,
-    isLoading,
+    isLoading as playersLoading,
   } from '../../lib/stores/players'
   import { gameId } from '../../lib/stores/auth'
-  import { roundPicks, getRoundPicks } from '../../lib/stores/round'
+  import {
+    roundPicks,
+    lockRound,
+    isLocked,
+    getRoundPicks,
+  } from '../../lib/stores/round'
   import { isConnected } from '../../lib/stores/websocket'
 
   let interval
-  function lockRound() {}
+  let loading = false
+
+  async function onLockRound() {
+    try {
+      loading = true
+      await lockRound()
+      loading = false
+    } catch (err) {
+      getErrorsFromResponse(err).join(', ')
+    }
+  }
 
   function loadData() {
     getPlayers($gameId)
@@ -29,9 +45,15 @@
   }
 
   $: {
-    if ($isConnected && interval) {
-      clearInterval(interval)
-    } else {
+    if ($isConnected) {
+      if (interval) {
+        clearInterval(interval)
+      }
+    } else if (!$isLocked) {
+      // cleanup just in case
+      if (interval) {
+        clearInterval(interval)
+      }
       interval = setInterval(() => {
         getRoundPicks()
       }, 5000)
@@ -60,7 +82,15 @@
 
   <FormError errorMsg={$error} />
 
-  <Button type="button" on:click={lockRound}>Lock Round</Button>
+  {#if loading || $playersLoading}
+    <p>Loading&hellip;</p>
+  {/if}
+
+  <Button
+    type="button"
+    on:click={lockRound}
+    disabled={loading || $playersLoading}>Lock Round</Button
+  >
 </div>
 
 <style>

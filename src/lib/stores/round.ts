@@ -4,6 +4,8 @@ import * as api from '../api'
 import type { Question } from '../types/question'
 import type { UserAnswer } from '../types/userAnswer'
 
+import { game } from './game'
+
 interface RoundState {
   playerNames: string[]
   locked: boolean
@@ -64,5 +66,17 @@ export const getRoundPicks = async () => {
     ...r,
     roundPicks: res.data,
     locked: res.locked,
+  }))
+}
+
+export const lockRound = async () => {
+  await api.postRequest('/rounds/lock')
+  round.update((r) => ({
+    ...r,
+    locked: true,
+  }))
+  game.update((g) => ({
+    ...g,
+    open_round: false,
   }))
 }

@@ -9,7 +9,7 @@ import {
 } from '../../../lib/stores/game'
 import {
   round,
-  ApiResponse as RoundApiResponse,
+  RoundStatusResponse,
   getInitialState as getRoundInitialState,
 } from '../../../lib/stores/round'
 import { renderWithRouter } from '../../../test/renderWithRouter'
@@ -85,7 +85,7 @@ describe('<CurrentRound />', () => {
       const { queryByText } = renderWithRouter(CurrentRound)
 
       await waitFor(() =>
-        expect(queryByText(/viewcurrentpicks/i)).toBeInTheDocument()
+        expect(queryByText(/Who has picked/i)).toBeInTheDocument()
       )
       expect(queryByText(/chooseanswers/i)).not.toBeInTheDocument()
       expect(queryByText(/selectpicks/i)).not.toBeInTheDocument()
@@ -98,7 +98,7 @@ describe('<CurrentRound />', () => {
           `${import.meta.env.VITE_API_URL}/current-round`,
           (req, res, ctx) => {
             return res(
-              ctx.json<RoundApiResponse>({
+              ctx.json<RoundStatusResponse>({
                 ...getRoundResponse(),
                 locked: true,
               })
@@ -111,7 +111,7 @@ describe('<CurrentRound />', () => {
       await waitFor(() =>
         expect(queryByText(/chooseanswers/i)).toBeInTheDocument()
       )
-      expect(queryByText(/viewcurrentpicks/i)).not.toBeInTheDocument()
+      expect(queryByText(/Who has picked/i)).not.toBeInTheDocument()
       expect(queryByText(/selectpicks/i)).not.toBeInTheDocument()
       expect(queryByText(/lockscreen/i)).not.toBeInTheDocument()
     })
@@ -143,7 +143,7 @@ describe('<CurrentRound />', () => {
         expect(queryByText(/selectpicks/i)).toBeInTheDocument()
       )
       expect(queryByText(/chooseanswers/i)).not.toBeInTheDocument()
-      expect(queryByText(/viewcurrentpicks/i)).not.toBeInTheDocument()
+      expect(queryByText(/Who has picked/i)).not.toBeInTheDocument()
       expect(queryByText(/lockscreen/i)).not.toBeInTheDocument()
     })
 
@@ -153,7 +153,7 @@ describe('<CurrentRound />', () => {
           `${import.meta.env.VITE_API_URL}/current-round`,
           (req, res, ctx) => {
             return res(
-              ctx.json<RoundApiResponse>({
+              ctx.json<RoundStatusResponse>({
                 ...getRoundResponse(),
                 locked: true,
               })
@@ -166,7 +166,7 @@ describe('<CurrentRound />', () => {
       await waitFor(() =>
         expect(queryByText(/lockscreen/i)).toBeInTheDocument()
       )
-      expect(queryByText(/viewcurrentpicks/i)).not.toBeInTheDocument()
+      expect(queryByText(/Who has picked/i)).not.toBeInTheDocument()
       expect(queryByText(/selectpicks/i)).not.toBeInTheDocument()
       expect(queryByText(/chooseanswers/i)).not.toBeInTheDocument()
     })
