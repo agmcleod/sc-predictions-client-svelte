@@ -88,7 +88,7 @@
 
   <Button
     type="button"
-    on:click={lockRound}
+    on:click={onLockRound}
     disabled={loading || $playersLoading}>Lock Round</Button
   >
 </div>
