@@ -88,14 +88,14 @@ describe('<CurrentRound />', () => {
           }
         )
       )
-      const { getByText } = renderWithRouter(CurrentRound)
+      const { getByText, queryByText } = renderWithRouter(CurrentRound)
 
       await waitFor(() =>
         expect(getByText(/Who has picked/i)).toBeInTheDocument()
       )
-      expect(getByText(/chooseanswers/i)).not.toBeInTheDocument()
-      expect(getByText(/selectpicks/i)).not.toBeInTheDocument()
-      expect(getByText(/lockscreen/i)).not.toBeInTheDocument()
+      expect(queryByText(/chooseanswers/i)).not.toBeInTheDocument()
+      expect(queryByText(/selectpicks/i)).not.toBeInTheDocument()
+      expect(queryByText(/lockscreen/i)).not.toBeInTheDocument()
     })
 
     test('isLocked but not finished, has to choose answers', async () => {
@@ -112,14 +112,14 @@ describe('<CurrentRound />', () => {
           }
         )
       )
-      const { getByText } = renderWithRouter(CurrentRound)
+      const { getByText, queryByText } = renderWithRouter(CurrentRound)
 
       await waitFor(() =>
         expect(getByText(/chooseanswers/i)).toBeInTheDocument()
       )
-      expect(getByText(/Who has picked/i)).not.toBeInTheDocument()
-      expect(getByText(/selectpicks/i)).not.toBeInTheDocument()
-      expect(getByText(/lockscreen/i)).not.toBeInTheDocument()
+      expect(queryByText(/Who has picked/i)).not.toBeInTheDocument()
+      expect(queryByText(/selectpicks/i)).not.toBeInTheDocument()
+      expect(queryByText(/lockscreen/i)).not.toBeInTheDocument()
     })
   })
 
@@ -143,12 +143,12 @@ describe('<CurrentRound />', () => {
           }
         )
       )
-      const { getByText } = renderWithRouter(CurrentRound)
+      const { getByText, queryByText } = renderWithRouter(CurrentRound)
 
       await waitFor(() => expect(getByText(/selectpicks/i)).toBeInTheDocument())
-      expect(getByText(/chooseanswers/i)).not.toBeInTheDocument()
-      expect(getByText(/Who has picked/i)).not.toBeInTheDocument()
-      expect(getByText(/lockscreen/i)).not.toBeInTheDocument()
+      expect(queryByText(/chooseanswers/i)).not.toBeInTheDocument()
+      expect(queryByText(/Who has picked/i)).not.toBeInTheDocument()
+      expect(queryByText(/lockscreen/i)).not.toBeInTheDocument()
     })
 
     test('isLocked but not finished, sees the locked screen', async () => {
@@ -165,12 +165,12 @@ describe('<CurrentRound />', () => {
           }
         )
       )
-      const { getByText } = renderWithRouter(CurrentRound)
+      const { getByText, queryByText } = renderWithRouter(CurrentRound)
 
       await waitFor(() => expect(getByText(/lockscreen/i)).toBeInTheDocument())
-      expect(getByText(/Who has picked/i)).not.toBeInTheDocument()
-      expect(getByText(/selectpicks/i)).not.toBeInTheDocument()
-      expect(getByText(/chooseanswers/i)).not.toBeInTheDocument()
+      expect(queryByText(/Who has picked/i)).not.toBeInTheDocument()
+      expect(queryByText(/selectpicks/i)).not.toBeInTheDocument()
+      expect(queryByText(/chooseanswers/i)).not.toBeInTheDocument()
     })
   })
 })
