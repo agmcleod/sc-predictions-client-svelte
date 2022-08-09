@@ -1,6 +1,6 @@
 import { rest } from 'msw'
 import { setupServer, SetupServerApi } from 'msw/node'
-import { waitFor } from '@testing-library/svelte'
+import { waitFor, within } from '@testing-library/svelte'
 
 import { auth } from '../../../lib/stores/auth'
 import {
@@ -42,6 +42,25 @@ beforeAll(() => {
           ])
         )
       }
+    ),
+    rest.get(
+      `${import.meta.env.VITE_API_URL}/rounds/picks`,
+      (req, res, ctx) => {
+        return res(
+          ctx.json({
+            locked: false,
+            data: [
+              {
+                question_id: 1,
+                id: 1,
+                user_id: 1,
+                answer: 'foo',
+                user_name: 'user1',
+              },
+            ],
+          })
+        )
+      }
     )
   )
 
@@ -69,7 +88,14 @@ describe('<ViewCurrentPicks />', () => {
     await waitFor(() =>
       expect(getByText(/user1/i, { selector: 'li' })).toBeInTheDocument()
     )
-    expect(getByText(/user2/i, { selector: 'li' })).toBeInTheDocument()
+    await waitFor(() =>
+      expect(
+        within(getByText(/user1/i)).getByText(/user picked/i)
+      ).toBeInTheDocument()
+    )
+    const user2 = getByText(/user2/i, { selector: 'li' })
+    expect(user2).toBeInTheDocument()
+    expect(within(user2).getByText(/user has not picked/i)).toBeInTheDocument()
   })
 
   test('renders error from api', async () => {

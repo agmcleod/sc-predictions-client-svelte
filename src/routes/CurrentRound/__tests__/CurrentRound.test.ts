@@ -50,6 +50,12 @@ beforeAll(() => {
       (req, res, ctx) => {
         return res(ctx.json({}))
       }
+    ),
+    rest.get(
+      `${import.meta.env.VITE_API_URL}/rounds/picks`,
+      (req, res, ctx) => {
+        return res(ctx.json({}))
+      }
     )
   )
 

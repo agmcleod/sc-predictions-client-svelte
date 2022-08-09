@@ -36,6 +36,7 @@
 
   function loadData() {
     getPlayers($gameId)
+    getRoundPicks()
   }
 
   function cleanup() {
@@ -72,9 +73,9 @@
       <li class="player">
         {player.user_name}
         {#if $roundPicks.filter((pick) => pick.user_id === player.id).length > 0}
-          <CheckmarkIcon fill="green" />
+          <CheckmarkIcon fill="green" title="user picked" />
         {:else}
-          <CloseIcon fill="red" />
+          <CloseIcon fill="red" title="user has not picked" />
         {/if}
       </li>
     {/each}
