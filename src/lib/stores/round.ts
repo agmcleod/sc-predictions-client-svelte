@@ -3,10 +3,11 @@ import { writable, derived } from 'svelte/store'
 import * as api from '../api'
 import type { Question } from '../types/question'
 import type { UserAnswer } from '../types/userAnswer'
+import type { Answers } from '../types/answers'
 
 import { game } from './game'
 
-interface RoundState {
+export interface RoundState {
   playerNames: string[]
   locked: boolean
   finished: boolean
@@ -78,5 +79,18 @@ export const lockRound = async () => {
   game.update((g) => ({
     ...g,
     open_round: false,
+  }))
+}
+
+export const scoreRound = async (answers: Answers) => {
+  await api.postRequest('/rounds/score', {
+    answers: answers.map((a) => ({
+      question_id: a.id,
+      answer: a.value,
+    })),
+  })
+  round.update((r) => ({
+    ...r,
+    finished: true,
   }))
 }

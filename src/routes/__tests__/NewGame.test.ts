@@ -61,9 +61,9 @@ describe('<NewGame />', () => {
   })
 
   test('renders a single question dropdown after loading questions from the API', async () => {
-    const { queryByText } = renderWithRouter(NewGame)
-    await waitFor(() => expect(queryByText(/Question One/)).toBeInTheDocument())
-    await waitFor(() => expect(queryByText(/Question Two/)).toBeInTheDocument())
+    const { queryByText, getByText } = renderWithRouter(NewGame)
+    await waitFor(() => expect(getByText(/Question One/)).toBeInTheDocument())
+    await waitFor(() => expect(getByText(/Question Two/)).toBeInTheDocument())
     expect(queryByText(/Loading/)).not.toBeInTheDocument()
   })
 
@@ -90,7 +90,7 @@ describe('<NewGame />', () => {
     await fireEvent.change(selects[1], { target: { value: '2' } })
 
     let resultingToken = ''
-    auth.subscribe((token) => {
+    const unsub = auth.subscribe((token) => {
       resultingToken = token
     })
 
@@ -105,5 +105,6 @@ describe('<NewGame />', () => {
     await waitFor(() => expect(resultingToken).toEqual(token))
 
     expect(navigate).toHaveBeenCalledWith('/lobby')
+    unsub()
   })
 })

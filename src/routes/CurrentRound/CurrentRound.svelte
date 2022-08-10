@@ -5,6 +5,7 @@
   import { getGameStatus, hasOpenRound } from '../../lib/stores/game'
   import { getRoundStatus, isFinished, isLocked } from '../../lib/stores/round'
   import { role } from '../../lib/stores/auth'
+  import ChooseAnswers from './ChooseAnswers.svelte'
   import ViewCurrentPicks from './ViewCurrentPicks.svelte'
 
   function loadData() {
@@ -19,7 +20,7 @@
   {#if $hasOpenRound}
     <ViewCurrentPicks />
   {:else if $isLocked && !$isFinished}
-    ChooseAnswers
+    <ChooseAnswers />
   {/if}
 {:else if $role === Role.Player}
   {#if $hasOpenRound && !$isLocked}

@@ -23,11 +23,16 @@ let server: SetupServerApi
 function getRoundResponse() {
   return {
     round_id: 1,
-    player_names: [],
+    player_names: ['abc', 'def'],
     locked: false,
     finished: false,
     picks_chosen: false,
-    questions: [],
+    questions: [
+      {
+        id: 1,
+        body: 'Who will win?',
+      },
+    ],
   }
 }
 
@@ -99,7 +104,7 @@ describe('<CurrentRound />', () => {
       await waitFor(() =>
         expect(getByText(/Who has picked/i)).toBeInTheDocument()
       )
-      expect(queryByText(/chooseanswers/i)).not.toBeInTheDocument()
+      expect(queryByText(/Select answers for round/i)).not.toBeInTheDocument()
       expect(queryByText(/selectpicks/i)).not.toBeInTheDocument()
       expect(queryByText(/lockscreen/i)).not.toBeInTheDocument()
     })
@@ -121,7 +126,7 @@ describe('<CurrentRound />', () => {
       const { getByText, queryByText } = renderWithRouter(CurrentRound)
 
       await waitFor(() =>
-        expect(getByText(/chooseanswers/i)).toBeInTheDocument()
+        expect(getByText(/Select answers for round/i)).toBeInTheDocument()
       )
       expect(queryByText(/Who has picked/i)).not.toBeInTheDocument()
       expect(queryByText(/selectpicks/i)).not.toBeInTheDocument()
@@ -152,7 +157,7 @@ describe('<CurrentRound />', () => {
       const { getByText, queryByText } = renderWithRouter(CurrentRound)
 
       await waitFor(() => expect(getByText(/selectpicks/i)).toBeInTheDocument())
-      expect(queryByText(/chooseanswers/i)).not.toBeInTheDocument()
+      expect(queryByText(/Select answers for round/i)).not.toBeInTheDocument()
       expect(queryByText(/Who has picked/i)).not.toBeInTheDocument()
       expect(queryByText(/lockscreen/i)).not.toBeInTheDocument()
     })
@@ -176,7 +181,7 @@ describe('<CurrentRound />', () => {
       await waitFor(() => expect(getByText(/lockscreen/i)).toBeInTheDocument())
       expect(queryByText(/Who has picked/i)).not.toBeInTheDocument()
       expect(queryByText(/selectpicks/i)).not.toBeInTheDocument()
-      expect(queryByText(/chooseanswers/i)).not.toBeInTheDocument()
+      expect(queryByText(/Select answers for round/i)).not.toBeInTheDocument()
     })
   })
 })
