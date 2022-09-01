@@ -68,12 +68,16 @@
   onMount(loadData)
   onDestroy(cleanup)
 
-  let answers: Answers
-  $: answers = $questions.map((q) => ({
-    id: q.id,
-    label: q.body,
-    value: '',
-  }))
+  let answers: Answers = []
+  $: {
+    if (answers.length === 0) {
+      answers = $questions.map((q) => ({
+        id: q.id,
+        label: q.body,
+        value: '',
+      }))
+    }
+  }
 </script>
 
 {#if $arePicksChosen}

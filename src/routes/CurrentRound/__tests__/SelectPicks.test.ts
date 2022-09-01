@@ -93,6 +93,15 @@ describe('<SelectPicks />', () => {
   })
 
   it('selecting values scores the round', async () => {
+    server.use(
+      rest.post(
+        `${import.meta.env.VITE_API_URL}/rounds/set-picks`,
+        (req, res, ctx) => {
+          return res(ctx.json({}))
+        }
+      )
+    )
+
     const { findByLabelText, getAllByText, getByText, queryAllByText } =
       renderWithRouter(SelectPicks)
 
@@ -118,7 +127,9 @@ describe('<SelectPicks />', () => {
     expect(errors.length).toEqual(0)
 
     await waitFor(() => expect(roundDetails.picksChosen).toEqual(true))
-    waitFor(() => expect(getByText(/picks selected/i)).toBeInTheDocument())
+    await waitFor(() =>
+      expect(getByText(/picks selected/i)).toBeInTheDocument()
+    )
 
     unsubscribe()
   })

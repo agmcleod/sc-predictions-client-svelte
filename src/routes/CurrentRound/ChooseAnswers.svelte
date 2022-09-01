@@ -25,12 +25,16 @@
     }
   }
 
-  let answers: Answers
-  $: answers = $round.questions.map((q) => ({
-    id: q.id,
-    label: q.body,
-    value: '',
-  }))
+  let answers: Answers = []
+  $: {
+    if (answers.length === 0) {
+      answers = $round.questions.map((q) => ({
+        id: q.id,
+        label: q.body,
+        value: '',
+      }))
+    }
+  }
 </script>
 
 {#if $round.playerNames.length > 0 && $round.questions.length > 0}
