@@ -46,6 +46,9 @@ export const isLocked = derived(round, (round) => {
 })
 export const isFinished = derived(round, (round) => round.finished)
 export const roundPicks = derived(round, (round) => round.roundPicks)
+export const playerNames = derived(round, (round) => round.playerNames)
+export const arePicksChosen = derived(round, (round) => round.picksChosen)
+export const questions = derived(round, (round) => round.questions)
 
 export const getRoundStatus = async () => {
   const res = await api.getRequest<RoundStatusResponse>('/current-round')
@@ -92,5 +95,15 @@ export const scoreRound = async (answers: Answers) => {
   round.update((r) => ({
     ...r,
     finished: true,
+  }))
+}
+
+export const savePicks = async (answers: Answers) => {
+  await api.postRequest('/rounds/set-picks', {
+    answers,
+  })
+  round.update((r) => ({
+    ...r,
+    picksChosen: true,
   }))
 }

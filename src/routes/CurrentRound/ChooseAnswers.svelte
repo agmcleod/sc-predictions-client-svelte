@@ -8,7 +8,7 @@
   let error = ''
   let answerValidationErrors = {}
 
-  function onSubmit() {
+  async function onSubmit() {
     answerValidationErrors = {}
     for (const answer of answers) {
       if (!answer.value) {
@@ -17,13 +17,16 @@
     }
 
     if (Object.keys(answerValidationErrors).length === 0) {
-      scoreRound(answers)
+      try {
+        await scoreRound(answers)
+      } catch (err) {
+        error = err.message
+      }
     }
   }
 
-  // This may need to change to a reactive statement & use a derived store
   let answers: Answers
-  answers = $round.questions.map((q) => ({
+  $: answers = $round.questions.map((q) => ({
     id: q.id,
     label: q.body,
     value: '',

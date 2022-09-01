@@ -77,7 +77,7 @@ describe('<Join />', () => {
   })
 
   test('shows error returned from API', async () => {
-    const { findByText, findByLabelText, queryByText } = renderWithRouter(Join)
+    const { findByText, findByLabelText, getByText } = renderWithRouter(Join)
     const navigate = useNavigate()
 
     server.use(
@@ -104,7 +104,7 @@ describe('<Join />', () => {
     await fireEvent.click(submitButton)
 
     await waitFor(() =>
-      expect(queryByText(/Username already in use/i)).toBeInTheDocument()
+      expect(getByText(/Username already in use/i)).toBeInTheDocument()
     )
 
     expect(navigate).toHaveBeenCalledWith('/lobby')
