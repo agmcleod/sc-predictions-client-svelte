@@ -105,8 +105,8 @@ describe('<CurrentRound />', () => {
         expect(getByText(/Who has picked/i)).toBeInTheDocument()
       )
       expect(queryByText(/Select answers for round/i)).not.toBeInTheDocument()
-      expect(queryByText(/selectpicks/i)).not.toBeInTheDocument()
-      expect(queryByText(/lockscreen/i)).not.toBeInTheDocument()
+      expect(queryByText(/Select your picks/i)).not.toBeInTheDocument()
+      expect(queryByText(/Round is locked/i)).not.toBeInTheDocument()
     })
 
     test('isLocked but not finished, has to choose answers', async () => {
@@ -129,8 +129,8 @@ describe('<CurrentRound />', () => {
         expect(getByText(/Select answers for round/i)).toBeInTheDocument()
       )
       expect(queryByText(/Who has picked/i)).not.toBeInTheDocument()
-      expect(queryByText(/selectpicks/i)).not.toBeInTheDocument()
-      expect(queryByText(/lockscreen/i)).not.toBeInTheDocument()
+      expect(queryByText(/Select your picks/i)).not.toBeInTheDocument()
+      expect(queryByText(/Round is locked/i)).not.toBeInTheDocument()
     })
   })
 
@@ -156,10 +156,12 @@ describe('<CurrentRound />', () => {
       )
       const { getByText, queryByText } = renderWithRouter(CurrentRound)
 
-      await waitFor(() => expect(getByText(/selectpicks/i)).toBeInTheDocument())
+      await waitFor(() =>
+        expect(getByText(/Select your picks/i)).toBeInTheDocument()
+      )
       expect(queryByText(/Select answers for round/i)).not.toBeInTheDocument()
       expect(queryByText(/Who has picked/i)).not.toBeInTheDocument()
-      expect(queryByText(/lockscreen/i)).not.toBeInTheDocument()
+      expect(queryByText(/Round is locked/i)).not.toBeInTheDocument()
     })
 
     test('isLocked but not finished, sees the locked screen', async () => {
@@ -178,9 +180,11 @@ describe('<CurrentRound />', () => {
       )
       const { getByText, queryByText } = renderWithRouter(CurrentRound)
 
-      await waitFor(() => expect(getByText(/lockscreen/i)).toBeInTheDocument())
+      await waitFor(() =>
+        expect(getByText(/Round is locked/i)).toBeInTheDocument()
+      )
       expect(queryByText(/Who has picked/i)).not.toBeInTheDocument()
-      expect(queryByText(/selectpicks/i)).not.toBeInTheDocument()
+      expect(queryByText(/Select your picks/i)).not.toBeInTheDocument()
       expect(queryByText(/Select answers for round/i)).not.toBeInTheDocument()
     })
   })

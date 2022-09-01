@@ -7,6 +7,8 @@
   import { role } from '../../lib/stores/auth'
   import ChooseAnswers from './ChooseAnswers.svelte'
   import ViewCurrentPicks from './ViewCurrentPicks.svelte'
+  import SelectPicks from './SelectPicks.svelte'
+  import LockScreen from './LockScreen.svelte'
 
   function loadData() {
     getGameStatus()
@@ -24,9 +26,9 @@
   {/if}
 {:else if $role === Role.Player}
   {#if $hasOpenRound && !$isLocked}
-    SelectPicks
+    <SelectPicks />
   {:else if $isLocked && !$isFinished}
-    LockScreen
+    <LockScreen />
   {/if}
 {/if}
 

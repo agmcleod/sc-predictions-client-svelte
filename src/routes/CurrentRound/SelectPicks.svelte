@@ -22,7 +22,6 @@
     try {
       await getRoundStatus()
     } catch (err) {
-      console.log(err.message)
       error = getErrorsFromResponse(err).join(', ')
     }
   }
