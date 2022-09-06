@@ -19,6 +19,7 @@
   let error = ''
 
   async function loadData() {
+    error = ''
     try {
       await getRoundStatus()
     } catch (err) {
@@ -43,7 +44,7 @@
       }
 
       interval = setInterval(() => {
-        getRoundStatus()
+        loadData()
       }, 5000)
     }
   }

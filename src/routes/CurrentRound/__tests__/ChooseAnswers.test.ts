@@ -29,7 +29,7 @@ afterAll(() => {
 })
 
 describe('<ChooseAnswers />', () => {
-  it('no form rendered if round data is not there yet', () => {
+  test('no form rendered if round data is not there yet', () => {
     const { queryByText } = renderWithRouter(ChooseAnswers)
     expect(queryByText(/select answers for round/i)).not.toBeInTheDocument()
   })
@@ -56,7 +56,7 @@ describe('<ChooseAnswers />', () => {
       })
     })
 
-    it('contains options of the playernames', async () => {
+    test('contains options of the playernames', async () => {
       const { getAllByText, getByText } = renderWithRouter(ChooseAnswers)
 
       await waitFor(() =>
@@ -66,7 +66,7 @@ describe('<ChooseAnswers />', () => {
       await waitFor(() => expect(getAllByText(/Serral/i).length).toEqual(3))
     })
 
-    it('not making selections show error messages', async () => {
+    test('not making selections show error messages', async () => {
       const { getByText, getAllByText } = renderWithRouter(ChooseAnswers)
       await waitFor(() =>
         expect(getByText(/select answers for round/i)).toBeInTheDocument()
@@ -79,7 +79,7 @@ describe('<ChooseAnswers />', () => {
       expect(errors.length).toEqual(3)
     })
 
-    it('selecting values scores the round', async () => {
+    test('selecting values scores the round', async () => {
       const { findByLabelText, getByText, queryAllByText } =
         renderWithRouter(ChooseAnswers)
 

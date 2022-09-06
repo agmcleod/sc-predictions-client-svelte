@@ -9,6 +9,7 @@
   import ViewCurrentPicks from './ViewCurrentPicks.svelte'
   import SelectPicks from './SelectPicks.svelte'
   import LockScreen from './LockScreen.svelte'
+  import Leaderboard from './Leaderboard.svelte'
 
   function loadData() {
     getGameStatus()
@@ -33,5 +34,5 @@
 {/if}
 
 {#if $isFinished}
-  Leaderboard
+  <Leaderboard />
 {/if}

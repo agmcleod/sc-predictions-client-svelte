@@ -46,13 +46,13 @@ afterAll(() => {
 })
 
 describe('<SelectPicks />', () => {
-  it('shows loading message', async () => {
+  test('shows loading message', async () => {
     const { queryByText } = renderWithRouter(SelectPicks)
     expect(queryByText(/select your picks/i)).toBeInTheDocument()
     expect(queryByText(/loading data/i)).toBeInTheDocument()
   })
 
-  it('shows an error if data loading fails', async () => {
+  test('shows an error if data loading fails', async () => {
     server.use(
       rest.get(
         `${import.meta.env.VITE_API_URL}/current-round`,
@@ -72,14 +72,14 @@ describe('<SelectPicks />', () => {
     )
   })
 
-  it('contains options of the playernames', async () => {
+  test('contains options of the playernames', async () => {
     const { getAllByText } = renderWithRouter(SelectPicks)
 
     await waitFor(() => expect(getAllByText(/abc/i).length).toEqual(2))
     expect(getAllByText(/def/i).length).toEqual(2)
   })
 
-  it('not making selections show error messages', async () => {
+  test('not making selections show error messages', async () => {
     const { getByText, getAllByText, queryByText } =
       renderWithRouter(SelectPicks)
     await waitFor(() => expect(queryByText(/loading data/i)).toBeNull())
@@ -92,7 +92,7 @@ describe('<SelectPicks />', () => {
     expect(errors.length).toEqual(2)
   })
 
-  it('selecting values scores the round', async () => {
+  test('selecting values scores the round', async () => {
     server.use(
       rest.post(
         `${import.meta.env.VITE_API_URL}/rounds/set-picks`,

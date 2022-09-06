@@ -53,7 +53,7 @@ beforeAll(() => {
     rest.get(
       `${import.meta.env.VITE_API_URL}/games/${gameId}/players`,
       (req, res, ctx) => {
-        return res(ctx.json({}))
+        return res(ctx.json([]))
       }
     ),
     rest.get(
@@ -187,5 +187,30 @@ describe('<CurrentRound />', () => {
       expect(queryByText(/Select your picks/i)).not.toBeInTheDocument()
       expect(queryByText(/Select answers for round/i)).not.toBeInTheDocument()
     })
+  })
+
+  test('sees leaderboard when finished', async () => {
+    auth.set(createToken(gameId, Role.Owner))
+    server.use(
+      rest.get(
+        `${import.meta.env.VITE_API_URL}/current-round`,
+        (req, res, ctx) => {
+          return res(
+            ctx.json({
+              ...getRoundResponse(),
+              finished: true,
+            })
+          )
+        }
+      )
+    )
+
+    const { getByText, queryByText } = renderWithRouter(CurrentRound)
+
+    await waitFor(() => expect(getByText(/Leaderboard/i)).toBeInTheDocument())
+    expect(queryByText(/Round is locked/i)).not.toBeInTheDocument()
+    expect(queryByText(/Who has picked/i)).not.toBeInTheDocument()
+    expect(queryByText(/Select your picks/i)).not.toBeInTheDocument()
+    expect(queryByText(/Select answers for round/i)).not.toBeInTheDocument()
   })
 })
