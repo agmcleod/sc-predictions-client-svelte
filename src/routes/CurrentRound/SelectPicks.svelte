@@ -10,21 +10,16 @@
     playerNames,
     getRoundStatus,
     savePicks,
+    error,
   } from '../../lib/stores/round'
   import { isConnected } from '../../lib/stores/websocket'
   import { getErrorsFromResponse } from '../../lib/getErrorsFromResponse'
 
   let interval
   let answerValidationErrors = {}
-  let error = ''
 
   async function loadData() {
-    error = ''
-    try {
-      await getRoundStatus()
-    } catch (err) {
-      error = getErrorsFromResponse(err).join(', ')
-    }
+    getRoundStatus()
   }
 
   function cleanup() {
@@ -57,11 +52,7 @@
       }
     }
     if (Object.keys(answerValidationErrors).length === 0) {
-      try {
-        await savePicks(answers)
-      } catch (err) {
-        error = getErrorsFromResponse(err).join(', ')
-      }
+      savePicks(answers)
     }
   }
 
@@ -105,7 +96,7 @@
   {/if}
 {/if}
 
-<FormError errorMsg={error} />
+<FormError errorMsg={$error} />
 
 <style>
   .answer {

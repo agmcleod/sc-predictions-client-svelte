@@ -11,39 +11,26 @@
   import { Link } from 'svelte-navigator'
 
   import FormError from '../../lib/components/FormError.svelte'
-  import { playersData, getPlayers } from '../../lib/stores/players'
+  import {
+    playersData,
+    getPlayers,
+    error as playersError,
+  } from '../../lib/stores/players'
   import { role, gameId } from '../../lib/stores/auth'
   import { Role } from '../../lib/types/tokenData'
   import { isConnected } from '../../lib/stores/websocket'
-  import { getGameStatus } from '../../lib/stores/game'
-  import { getRoundStatus } from '../../lib/stores/round'
-  import { getErrorsFromResponse } from '../../lib/getErrorsFromResponse'
+  import { getGameStatus, error as gameError } from '../../lib/stores/game'
+  import { getRoundStatus, error as roundError } from '../../lib/stores/round'
 
-  let roundStatusError = ''
-  let gameStatusError = ''
-  let playersFetchError = ''
   let interval
 
   async function loadData() {
-    try {
-      await getGameStatus()
-    } catch (err) {
-      gameStatusError = getErrorsFromResponse(err).join(', ')
-    }
-
-    try {
-      await getRoundStatus()
-    } catch (err) {
-      roundStatusError = getErrorsFromResponse(err).join(', ')
-    }
+    getGameStatus()
+    getRoundStatus()
   }
 
   async function loadPlayerData() {
-    try {
-      getPlayers($gameId)
-    } catch (err) {
-      playersFetchError = getErrorsFromResponse(err).join(', ')
-    }
+    getPlayers($gameId)
   }
 
   function cleanup() {
@@ -94,9 +81,9 @@
   </TableBody>
 </Table>
 
-<FormError errorMsg={gameStatusError} />
-<FormError errorMsg={roundStatusError} />
-<FormError errorMsg={playersFetchError} />
+<FormError errorMsg={$gameError} />
+<FormError errorMsg={$roundError} />
+<FormError errorMsg={$playersError} />
 
 {#if $role === Role.Owner}
   <Link to="/create-round">Start a new round</Link>

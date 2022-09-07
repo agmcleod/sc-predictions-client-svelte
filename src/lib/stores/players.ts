@@ -21,6 +21,7 @@ export const playersData = derived(players, (players) => players.data)
 export const error = derived(players, (players) => players.error)
 
 export const getPlayers = async (gameId: number) => {
+  players.update((obj) => ({ ...obj, loading: true }))
   try {
     const res = await api.getRequest<Player[]>(`/games/${gameId}/players`)
 

@@ -32,18 +32,16 @@ beforeAll(() => {
           })
         )
     ),
-    rest.get(
-      `${import.meta.env.VITE_API_URL}/games/current-round`,
-      (req, res, ctx) =>
-        res(
-          ctx.json({
-            locked: true,
-            finished: true,
-            questions: [],
-            playerNames: [],
-            picksChosen: true,
-          })
-        )
+    rest.get(`${import.meta.env.VITE_API_URL}/current-round`, (req, res, ctx) =>
+      res(
+        ctx.json({
+          locked: true,
+          finished: true,
+          questions: [],
+          playerNames: [],
+          picksChosen: true,
+        })
+      )
     ),
     rest.get(
       `${import.meta.env.VITE_API_URL}/games/${gameId}/players`,
@@ -68,6 +66,9 @@ beforeAll(() => {
   )
 
   server.listen({ onUnhandledRequest: 'error' })
+})
+
+beforeEach(() => {
   auth.set(createToken(gameId, Role.Owner))
 })
 
@@ -107,5 +108,70 @@ describe('<Leaderboard />', () => {
         selector: 'tbody > tr:nth-child(2) > td:nth-child(2)',
       })
     ).toBeInTheDocument()
+  })
+
+  test('owner sees create round link', async () => {
+    const { getByText } = renderWithRouter(Leaderboard)
+    await waitFor(() =>
+      expect(
+        getByText(/start a new round/i, { selector: 'a' })
+      ).toBeInTheDocument()
+    )
+  })
+
+  test('player does not see create round link', async () => {
+    auth.set(createToken(gameId, Role.Player))
+    const { queryByText } = renderWithRouter(Leaderboard)
+    await waitFor(() =>
+      expect(
+        queryByText(/start a new round/i, { selector: 'a' })
+      ).not.toBeInTheDocument()
+    )
+  })
+
+  test('shows error for failed requests', async () => {
+    server.use(
+      rest.get(
+        `${import.meta.env.VITE_API_URL}/games/${gameId}`,
+        (req, res, ctx) =>
+          res(
+            ctx.status(500),
+            ctx.json({
+              errors: ['Game status failed'],
+            })
+          )
+      ),
+      rest.get(
+        `${import.meta.env.VITE_API_URL}/current-round`,
+        (req, res, ctx) =>
+          res(
+            ctx.status(500),
+            ctx.json({
+              errors: ['Round status failed'],
+            })
+          )
+      ),
+      rest.get(
+        `${import.meta.env.VITE_API_URL}/games/${gameId}/players`,
+        (req, res, ctx) =>
+          res(
+            ctx.status(500),
+            ctx.json({
+              errors: ['Players list failed'],
+            })
+          )
+      )
+    )
+
+    const { getByText } = renderWithRouter(Leaderboard)
+    await waitFor(() =>
+      expect(getByText(/game status failed/i)).toBeInTheDocument()
+    )
+    await waitFor(() =>
+      expect(getByText(/round status failed/i)).toBeInTheDocument()
+    )
+    await waitFor(() =>
+      expect(getByText(/players list failed/i)).toBeInTheDocument()
+    )
   })
 })

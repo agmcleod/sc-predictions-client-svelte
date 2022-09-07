@@ -4,6 +4,7 @@ import * as api from '../api'
 import type { Question } from '../types/question'
 import type { UserAnswer } from '../types/userAnswer'
 import type { Answers } from '../types/answers'
+import { getErrorsFromResponse } from '../getErrorsFromResponse'
 
 import { game } from './game'
 
@@ -15,6 +16,8 @@ export interface RoundState {
   // when a player has chosen their picks
   picksChosen: boolean
   roundPicks: UserAnswer[]
+  error: string
+  loading: boolean
 }
 
 export interface RoundStatusResponse {
@@ -38,6 +41,8 @@ export const getInitialState = (): RoundState => ({
   questions: [],
   picksChosen: false,
   roundPicks: [],
+  error: '',
+  loading: false,
 })
 
 export const round = writable<RoundState>(getInitialState())
@@ -49,61 +54,111 @@ export const roundPicks = derived(round, (round) => round.roundPicks)
 export const playerNames = derived(round, (round) => round.playerNames)
 export const arePicksChosen = derived(round, (round) => round.picksChosen)
 export const questions = derived(round, (round) => round.questions)
+export const error = derived(round, (round) => round.error)
+export const isLoading = derived(round, (round) => round.loading)
 
 export const getRoundStatus = async () => {
-  const res = await api.getRequest<RoundStatusResponse>('/current-round')
-  round.update((r) => {
-    return {
+  try {
+    const res = await api.getRequest<RoundStatusResponse>('/current-round')
+    round.update((r) => {
+      return {
+        ...r,
+        loading: false,
+        error: '',
+        locked: res.locked,
+        finished: res.finished,
+        questions: res.questions,
+        playerNames: res.player_names,
+        picksChosen: res.picks_chosen,
+      }
+    })
+  } catch (err) {
+    round.update((r) => ({
       ...r,
-      locked: res.locked,
-      finished: res.finished,
-      questions: res.questions,
-      playerNames: res.player_names,
-      picksChosen: res.picks_chosen,
-    }
-  })
+      loading: false,
+      error: getErrorsFromResponse(err).join(', '),
+    }))
+  }
 }
 
 export const getRoundPicks = async () => {
-  const res = await api.getRequest<RoundPicksResponse>('/rounds/picks')
-  round.update((r) => ({
-    ...r,
-    roundPicks: res.data,
-    locked: res.locked,
-  }))
+  try {
+    const res = await api.getRequest<RoundPicksResponse>('/rounds/picks')
+    round.update((r) => ({
+      ...r,
+      loading: false,
+      error: '',
+      roundPicks: res.data,
+      locked: res.locked,
+    }))
+  } catch (err) {
+    round.update((r) => ({
+      ...r,
+      loading: false,
+      error: getErrorsFromResponse(err).join(', '),
+    }))
+  }
 }
 
 export const lockRound = async () => {
-  await api.postRequest('/rounds/lock')
-  round.update((r) => ({
-    ...r,
-    locked: true,
-  }))
-  game.update((g) => ({
-    ...g,
-    open_round: false,
-  }))
+  try {
+    await api.postRequest('/rounds/lock')
+    round.update((r) => ({
+      ...r,
+      locked: true,
+      loading: false,
+      error: '',
+    }))
+    game.update((g) => ({
+      ...g,
+      open_round: false,
+    }))
+  } catch (err) {
+    round.update((r) => ({
+      ...r,
+      loading: false,
+      error: getErrorsFromResponse(err).join(', '),
+    }))
+  }
 }
 
 export const scoreRound = async (answers: Answers) => {
-  await api.postRequest('/rounds/score', {
-    answers: answers.map((a) => ({
-      question_id: a.id,
-      answer: a.value,
-    })),
-  })
-  round.update((r) => ({
-    ...r,
-    finished: true,
-  }))
+  try {
+    await api.postRequest('/rounds/score', {
+      answers: answers.map((a) => ({
+        question_id: a.id,
+        answer: a.value,
+      })),
+    })
+    round.update((r) => ({
+      ...r,
+      loading: false,
+      error: '',
+      finished: true,
+    }))
+  } catch (err) {
+    round.update((r) => ({
+      ...r,
+      loading: false,
+      error: getErrorsFromResponse(err).join(', '),
+    }))
+  }
 }
 
 export const savePicks = async (answers: Answers) => {
-  await api.postRequest('/rounds/set-picks', {
-    answers,
-  })
-  round.update((r) => ({
-    ...r,
-    picksChosen: true,
-  }))
+  try {
+    await api.postRequest('/rounds/set-picks', {
+      answers,
+    })
+    round.update((r) => ({
+      ...r,
+      picksChosen: true,
+    }))
+  } catch (err) {
+    round.update((r) => ({
+      ...r,
+      loading: false,
+      error: getErrorsFromResponse(err).join(', '),
+    }))
+  }
 }
