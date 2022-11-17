@@ -9,6 +9,7 @@
   import NewGame from './routes/NewGame.svelte'
   import NewRound from './routes/NewRound.svelte'
   import Websocket from './lib/Websocket.svelte'
+  import CurrentRound from './routes/CurrentRound/CurrentRound.svelte'
 </script>
 
 <main class="mdc-typography">
@@ -19,6 +20,7 @@
       <PrivateRoute path="/lobby" component={Lobby} />
       <Route path="/join" component={Join} />
       <PrivateRoute path="/create-round" component={NewRound} />
+      <PrivateRoute path="/round" component={CurrentRound} />
     </Router>
   </div>
 </main>

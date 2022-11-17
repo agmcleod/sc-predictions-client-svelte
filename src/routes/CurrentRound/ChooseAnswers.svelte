@@ -43,6 +43,7 @@
     {#each answers as answer}
       <div class="answer">
         <Select bind:selected={answer.value} labelText={answer.label}>
+          <SelectItem value={''} text={'Choose an option'} />
           {#each $round.playerNames as playerName}
             <SelectItem value={playerName} text={playerName} />
           {/each}

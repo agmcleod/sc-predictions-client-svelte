@@ -6,6 +6,7 @@
   import { websocket } from './stores/websocket'
   import { game } from './stores/game'
   import { players } from './stores/players'
+  import { round } from './stores/round'
 
   interface WebsocketMsg {
     game_id: number
@@ -22,11 +23,14 @@
         game.update((state) => ({ ...state, ...message.data }))
         break
       case '/round-status':
-        // dispatch(round.actions.setData(message.data))
+        round.update((state) => ({ ...state, ...message.data }))
         break
       case '/picks':
-        // dispatch(round.actions.setRoundPicks(message.data.data))
-        // dispatch(round.actions.setLocked(message.data.locked))
+        round.update((state) => ({
+          ...state,
+          roundPicks: message.data.data,
+          locked: message.data.locked,
+        }))
         break
     }
   }

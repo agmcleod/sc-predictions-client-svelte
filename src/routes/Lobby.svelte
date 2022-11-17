@@ -22,7 +22,7 @@
     navigate('/round')
   }
 
-  let interval: null | NodeJS.Timeout = null
+  let interval: null | number = null
   $: if (!$websocket.connected) {
     interval = setInterval(() => {
       getPlayers($gameId)

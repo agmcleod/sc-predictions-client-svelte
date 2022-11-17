@@ -1,9 +1,11 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import { Button, Select, SelectItem } from 'carbon-components-svelte'
-  import { useNavigate } from 'svelte-navigator'
+  import { useNavigate, Link } from 'svelte-navigator'
 
-  import { auth } from '../lib/stores/auth'
+  import { auth, role } from '../lib/stores/auth'
+  import { Role } from '../lib/types/tokenData'
+  import { hasOpenRound } from '../lib/stores/game'
   import FormError from '../lib/components/FormError.svelte'
   import * as api from '../lib/api'
   import type { Question } from '../lib/types/question'
@@ -107,6 +109,16 @@
         <div class="button-cell"><Button type="submit">Create</Button></div>
       </div>
     </form>
+    <h3>OR</h3>
+    {#if $auth}
+      {#if !$hasOpenRound && $role === Role.Owner}
+        <Link to="/create-round">Create new round</Link>
+      {:else}
+        <Link to="/round">Continue current game</Link>
+      {/if}
+    {:else}
+      <Link to="/join">Join game</Link>
+    {/if}
   {/if}
 </div>
 
