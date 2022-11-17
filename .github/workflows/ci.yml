@@ -27,12 +27,12 @@ jobs:
         run: |
           npm install -g yarn
           yarn
-      - name: Cache
-        id: cache-nodemodules
-        uses: actions/cache@v2.1.4
-        with:
-          path: node_modules/*
-          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+      # - name: Cache
+      #   id: cache-nodemodules
+      #   uses: actions/cache@v2.1.4
+      #   with:
+      #     path: node_modules/*
+      #     key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
       - name: Install dependencies
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: yarn
