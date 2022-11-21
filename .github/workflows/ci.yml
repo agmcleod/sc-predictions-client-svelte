@@ -49,9 +49,9 @@ jobs:
           VITE_WS_URL: ${{ secrets.WS_URL }}
         run: |
           touch .env
-          echo 'VITE_API_URL=${VITE_API_URL}' > .env
-          echo 'VITE_HOST=${VITE_HOST}' >> .env
-          echo 'VITE_WS_URL=${VITE_WS_URL}' >> .env
+          echo "VITE_API_URL=${VITE_API_URL}" > .env
+          echo "VITE_HOST=${VITE_HOST}" >> .env
+          echo "VITE_WS_URL=${VITE_WS_URL}" >> .env
           yarn build
       - name: Deploy
         env:
